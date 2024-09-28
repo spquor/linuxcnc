@@ -1235,8 +1235,8 @@ RTDEPS := $(sort $(RTOBJS:.o=.d))
 modules: $(patsubst %.o,../rtlib/%.so,$(obj-m))
 ../rtlib/%.so:
 	$(ECHO) Linking $@
-	$(Q)ld -d -r -o objects/$*.tmp $^
-	$(Q)objcopy -j .rtapi_export -O binary objects/$*.tmp objects/$*.sym
+	$(Q)$(LD) -d -r -o objects/$*.tmp $^
+	$(Q)$(OBJCOPY) -j .rtapi_export -O binary objects/$*.tmp objects/$*.sym
 	$(Q)(echo '{ global : '; tr -s '\0' < objects/$*.sym | xargs -r0 printf '%s;\n' | grep .; echo 'local : * ; };') > objects/$*.ver
 	$(Q)$(CC) -shared -Bsymbolic -Wl,--version-script,objects/$*.ver -o $@ $^ -lm $(LDFLAGS)
 	$(Q)chmod -x $@

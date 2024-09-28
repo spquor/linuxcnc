@@ -31,6 +31,8 @@ if test "$srcdir" != "."; then
 fi
 
 AC_PROG_CXX([$RTSCC c++ clang++])
+AC_CHECK_PROG(LD, ld)
+AC_CHECK_PROG(OBJCOPY, objcopy)
 AC_PROG_INSTALL
 
 m4_include([m4/ax_require_defined.m4])

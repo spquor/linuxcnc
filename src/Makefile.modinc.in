@@ -119,8 +119,8 @@ $(foreach mod,$(patsubst %.o,%,$(obj-m)),\
 .PHONY: %.so
 %.so:
 	$(ECHO) Linking $@
-	$(Q)ld -d -r -o $*.tmp $^
-	$(Q)objcopy -j .rtapi_export -O binary $*.tmp $*.sym
+	$(Q)$(LD) -d -r -o $*.tmp $^
+	$(Q)$(OBJCOPY) -j .rtapi_export -O binary $*.tmp $*.sym
 	$(Q)(echo '{ global : '; tr -s '\0' < $*.sym | xargs -r0 printf '%s;\n' | grep .; echo 'local : * ; };') > $*.ver
 	$(Q)$(CC) -shared -Bsymbolic $(LDFLAGS) -Wl,--version-script,$*.ver -o $@ $^ -lm $(EXTRA_LDFLAGS)
 	$(Q)chmod -x $@
