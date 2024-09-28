@@ -40,7 +40,7 @@
 #define rtapi_outb(x,y) ((void)0)
 #define rtapi_outw(x,y) ((void)0)
 #define rtapi_outl(x,y) ((void)0)
-#define rtapi_ioperm(x,y,z) ((void)0)
+#define rtapi_ioperm(x,y,z) (-1)
 #endif
 
 #endif
