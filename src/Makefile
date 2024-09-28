@@ -252,8 +252,9 @@ INCLUDE += $(LIBTIRPC_CFLAGS)
 # Compilation options.	Perhaps some of these should come from Makefile.inc? (CXXFLAGS now does)
 INTEGER_OVERFLOW_FLAGS := -fwrapv
 OPT := -Os $(INTEGER_OVERFLOW_FLAGS)
-DEBUG := $(DEBUG) -g -Wall -D_FORTIFY_SOURCE=2
-CFLAGS := $(INCLUDE) $(OPT) $(DEBUG) -DULAPI -std=gnu11 -Werror=implicit-function-declaration $(CFLAGS) $(CPPFLAGS) $(EXTRA_DEBUG)
+DEBUG := $(DEBUG) -g -Wall
+CFLAGS := $(INCLUDE) $(OPT) $(DEBUG) -DULAPI -Werror=implicit-function-declaration $(CFLAGS) $(CPPFLAGS) $(EXTRA_DEBUG)
+CFLAGS += -std=gnu11
 CXXFLAGS := $(INCLUDE) $(OPT) $(DEBUG) -DULAPI -Werror=overloaded-virtual $(CXXFLAGS) $(CPPFLAGS) $(EXTRA_DEBUG)
 CXXFLAGS += -std=gnu++20
 # In Debian 11, any inclusion of <boost/python.hpp> leads to several
