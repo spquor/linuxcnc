@@ -197,6 +197,7 @@ class _GStat(GObject.GObject):
         'move-text-lineup': (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, ()),
         'move-text-linedown': (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, ()),
         'dialog-request': (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
+        'dialog-update': (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
         'focus-overlay-changed': (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, (GObject.TYPE_BOOLEAN, GObject.TYPE_STRING,
                             GObject.TYPE_PYOBJECT)),
         'play-sound': (GObject.SignalFlags.RUN_FIRST , GObject.TYPE_NONE, (GObject.TYPE_STRING,)),
@@ -230,6 +231,10 @@ class _GStat(GObject.GObject):
              , linuxcnc.INTERP_PAUSED: 'interp-paused'
              , linuxcnc.INTERP_IDLE: 'interp-idle'
              }
+
+    DEFAULT = 0
+    WARNING = 1
+    CRITICAL = 2
 
     TEMPARARY_MESSAGE = 255
     OPERATOR_ERROR = linuxcnc.OPERATOR_ERROR
@@ -486,7 +491,7 @@ class _GStat(GObject.GObject):
             # file name if call level != 0 in the merge() function above.
             # do avoid that a signal is emitted in that case, causing
             # a reload of the preview and sourceview widgets
-            if self.stat.interp_state == linuxcnc.INTERP_IDLE:
+            if self.stat.interp_state == linuxcnc.INTERP_IDLE and file_new != "":
                 self.emit('file-loaded', file_new)
 
         #ToDo : Find a way to avoid signal when the line changed due to

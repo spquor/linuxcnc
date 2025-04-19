@@ -10,12 +10,12 @@ halcmd_twopass - short description
 
 == DESCRIPTION
 
-*halcmd_twopass* is a utility script used when parsing HAL files.
+*halcmd_twopass* is an utility script used when parsing HAL files.
 It is of little relevance to normal users and is used internally by the system.
 
 == SEE ALSO
 
-linuxcnc(1), http://linuxcnc.org/docs/html/hal/twopass.html
+linuxcnc(1), https://linuxcnc.org/docs/html/hal/twopass.html
 
 Much more information about LinuxCNC and HAL is available in the
 LinuxCNC and HAL User Manuals, found at /usr/share/doc/LinuxCNC/.

@@ -196,7 +196,12 @@ class IndicatedMixIn( _HalWidgetBase):
     def connectSignals(self):
         def _update(state):
             self.setChecked(state)
-            if self._HAL_pin is False:
+            # linuxcnc status changes option uses _flip_state()
+            # hal pins option calls indicator_update() from
+            # HAL's value_changed callback set in _hal_init() function
+            # otherwise:
+            # update indicator to button state if halpin or status won't
+            if self._HAL_pin is False and self._ind_status is False:
                 self.indicator_update(state)
             # if using state labels option update the labels
             if self._state_text:
@@ -567,6 +572,7 @@ class IndicatedMixIn( _HalWidgetBase):
     @pyqtSlot(int)
     def setFlashRate(self, value):
         self._flashRate = value
+        self._timer.setInterval(self._flashRate)
         self.update()
 
     def set_indicator_size(self, data):
