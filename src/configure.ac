@@ -1645,9 +1645,13 @@ if test "$PYTHON_TK_VERSION" != "$TK_VERSION"; then
 fi
 AC_MSG_RESULT([$PYTHON_TK_VERSION])
 
-AC_MSG_CHECKING(for site-package location)
-SITEPY="$($PYTHON -c 'import sysconfig; s = sysconfig.get_scheme_names(); m=list(set(("deb_system", "rpm_prefix")) & set(s)); print(sysconfig.get_path("platlib", m.__getitem__(0))) if m else print("/usr/lib/python3/dist-packages");')"
-AC_MSG_RESULT($SITEPY)
+if test X"$cross_compiling" = Xyes; then
+    PYTHON_TARGET=/usr/bin/$PYTHON_BIN
+    SITEPY=/usr/lib/$PYTHON_LIB
+else
+    PYTHON_TARGET=$PYTHON
+    SITEPY="$($PYTHON -c 'import sysconfig; s = sysconfig.get_scheme_names(); m=list(set(("deb_system", "rpm_prefix")) & set(s)); print(sysconfig.get_path("platlib", m.__getitem__(0))) if m else print("/usr/lib/python3/dist-packages");')"
+fi
 
 AC_MSG_CHECKING(for working GLU quadrics)
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
@@ -1661,7 +1665,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 AC_MSG_CHECKING(for Xmu headers)
 AC_CHECK_HEADERS(X11/Xmu/Xmu.h,[],[AC_MSG_ERROR([Required Xmu header missing.  Install it, or specify --disable-python to skip the parts of LinuxCNC that depend on Python])])
 
-AC_SUBST([LIBPYTHON])
+AC_SUBST([PYTHON_TARGET])
 AC_SUBST([SITEPY])
 
 #
