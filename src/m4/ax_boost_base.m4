@@ -225,7 +225,7 @@ AC_DEFUN([_AX_BOOST_BASE_RUNDETECT],[
                 fi
             fi
         else
-            if test "x$cross_compiling" != "xyes" ; then
+            if test X"$cross_compiling" != Xyes ; then
                 for _AX_BOOST_BASE_boost_path in /usr /usr/local /opt /opt/local /opt/homebrew ; do
                     if test -d "$_AX_BOOST_BASE_boost_path" && test -r "$_AX_BOOST_BASE_boost_path" ; then
                         for i in `ls -d $_AX_BOOST_BASE_boost_path/include/boost-* 2>/dev/null`; do

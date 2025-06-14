@@ -74,8 +74,6 @@ else
 fi
 AC_SUBST([EMC2VERSION])
 
-AC_PATH_PROG(GREP, grep)
-
 #
 # check for pkg-config
 #
@@ -834,6 +832,12 @@ AC_PROG_MAKE_SET
 AC_PROG_RANLIB
 AC_PATH_TOOL(AR, ar)
 AC_PATH_TOOL(INSTALL, install)
+
+AC_PATH_PROG(GREP, grep, "none")
+if test $GREP = "none"
+then
+    AC_MSG_ERROR([grep not found])
+fi
 
 AC_PATH_PROG(SED, sed, "none")
 if test $SED = "none"
