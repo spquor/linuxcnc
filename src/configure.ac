@@ -1326,7 +1326,7 @@ if (test "x$TCLCONFIG" = "x"); then
    AC_MSG_RESULT([tclConfig.sh not found, trying tcl.h and libs.
 		  If it doesn't work try running ./configure --with-tclConfig=<path to tclConfig.sh>])
    AC_CHECK_HEADERS([tcl.h])
-   AC_SEARCH_LIBS(Tcl_Init,[tcl tcl8.7 tcl8.6],[],[AC_MSG_ERROR([tcl lib not found])])
+   AC_SEARCH_LIBS(Tcl_Init,[tcl tcl8.7 tcl8.6],[],[AC_MSG_WARN([tcl lib not found])])
 else
 # tclConfig.sh found,
 # extracting vars
@@ -1366,7 +1366,7 @@ if (test "x$TKCONFIG" = "x"); then
    AC_MSG_RESULT([tkConfig.sh not found, trying tk.h and libs.
 		  If it doesn't work try running ./configure --with-tkConfig=<path to tkConfig.sh>])
    AC_CHECK_HEADERS([tk.h])
-   AC_SEARCH_LIBS(Tk_Init,[tk tcl8.7 tcl8.6],[],[AC_MSG_ERROR([tk lib not found])])
+   AC_SEARCH_LIBS(Tk_Init,[tk tcl8.7 tcl8.6],[],[AC_MSG_WARN([tk lib not found])])
 else
 # tkConfig.sh found,
 # extracting vars
@@ -1374,12 +1374,6 @@ else
    . "$TKCONFIG"
    TK_CFLAGS="$TK_INCLUDE_SPEC $TK_XINCLUDES"
    TK_LIBS="$TK_LIBS $TK_LIB_SPEC"
-fi
-
-if ! test -z "$TCL_VERSION" && ! test -z "$TK_VERSION" && ! test "$TCL_VERSION" = "$TK_VERSION" ; then
-    AC_MSG_ERROR([Tcl and Tk versions must be the same, but configure found
-Tcl $TCL_VERSION and Tk $TK_VERSION.  You can use --with-tkConfig= and --with-tclConfig=
-to override the autodetected versions.])
 fi
 
 if test -f $TCL_EXEC_PREFIX/bin/wish$TCL_VERSION; then
@@ -1410,6 +1404,13 @@ AC_MSG_CHECKING([whether to check for runtime dependencies])
 AC_MSG_RESULT($RUNTIME_CHECK)
 
 if test "$RUNTIME_CHECK" = "yes"; then
+
+    if test -z "$TCL_VERSION" || test -z "$TK_VERSION" || ! test "$TCL_VERSION" = "$TK_VERSION" ; then
+        AC_MSG_ERROR([Tcl and Tk versions must exist and be the same, but configure found
+    Tcl $TCL_VERSION and Tk $TK_VERSION.  You can use --with-tkConfig= and --with-tclConfig=
+    to override the autodetected versions.])
+    fi
+
     AC_MSG_CHECKING([for BWidget using $TCLSH])
     if (unset DISPLAY; echo ["catch { package require bwidget }; exit [expr [lsearch [package names] BWidget] == -1]"] | $TCLSH); then
         AC_MSG_RESULT([found])
