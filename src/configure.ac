@@ -888,6 +888,13 @@ if test "$RTS" != uspace; then
     then
         AC_MSG_ERROR([lsmod not found])
     fi
+
+    if test X"$cross_compiling" = Xyes
+    then
+        AC_SUBST(INSMOD, /sbin/insmod)
+        AC_SUBST(RMMOD, /sbin/rmmod)
+        AC_SUBST(LSMOD, /sbin/lsmod)
+    fi
 fi
 
 AC_PATH_PROG(PIDOF, pidof, "none", $SPATH)
@@ -896,7 +903,7 @@ then
     AC_MSG_ERROR([pidof not found])
 fi
 
-AC_PATH_PROG(IPCS, ipcs, "none")
+AC_PATH_PROG(IPCS, ipcs, "none", $SPATH)
 if test $IPCS = "none"
 then
     AC_MSG_ERROR([ipcs not found])
@@ -907,13 +914,6 @@ if test $FUSER = "none"
 then
     AC_MSG_ERROR([fuser not found])
 fi
-
-AC_PATH_PROGS(YAPPS, yapps yapps2, "none", $SPATH)
-if test $YAPPS = "none"
-then
-    AC_MSG_ERROR([yapps/yapps2 and not found])
-fi
-AC_SUBST(YAPPS)
 
 # MANDB empty is handled in doc/Submakefile
 AC_PATH_PROG(MANDB, mandb, "")
@@ -972,6 +972,20 @@ if test -z "$YAPPS"; then
 install with "sudo apt-get install yapps2"])
 fi
 AC_SUBST(YAPPS)
+
+if test X"$cross_compiling" = Xyes
+then
+    AC_SUBST(GREP, /bin/grep)
+    AC_SUBST(SED, /bin/sed)
+    AC_SUBST(PS, /bin/ps)
+    AC_SUBST(KILL, /bin/kill)
+    AC_SUBST(WHOAMI, /usr/bin/whoami)
+    AC_SUBST(AWK, /usr/bin/awk)
+    AC_SUBST(PIDOF, /bin/pidof)
+    AC_SUBST(IPCS, /usr/bin/ipcs)
+    AC_SUBST(FUSER, /usr/bin/fuser)
+    AC_SUBST(YAPPS, /usr/bin/yapps2)
+fi
 
 ##############################################################################
 # Subsection 3.7 - check for programs needed to build documentation          #
