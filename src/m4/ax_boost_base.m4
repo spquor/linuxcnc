@@ -149,7 +149,7 @@ AC_DEFUN([_AX_BOOST_BASE_RUNDETECT],[
         search_libsubdirs="$multiarch_libsubdir $libsubdirs"
         for _AX_BOOST_BASE_boost_path_tmp in /usr /usr/local /opt /opt/local /opt/homebrew ; do
             if test X"$cross_compiling" = Xyes; then
-                _AX_BOOST_BASE_boost_path_tmp=$DESTDIR$_AX_BOOST_BASE_boost_path_tmp
+                _AX_BOOST_BASE_boost_path_tmp=$SYSROOT$_AX_BOOST_BASE_boost_path_tmp
             fi
             if test -d "$_AX_BOOST_BASE_boost_path_tmp/include/boost" && test -r "$_AX_BOOST_BASE_boost_path_tmp/include/boost" ; then
                 for libsubdir in $search_libsubdirs ; do

@@ -103,8 +103,8 @@ AC_DEFUN([AX_PYTHON_DEVEL],[
 	fi
 
     if test X"$cross_compiling" = Xyes; then
-       PYTHON_CPPFLAGS="-I$DESTDIR/usr/include/$PYTHON_BIN"
-       PYTHON_LIBS="-L$DESTDIR/usr/lib -l$PYTHON_LIB"
+       PYTHON_CPPFLAGS="-I$SYSROOT/usr/include/$PYTHON_BIN"
+       PYTHON_LIBS="-L$SYSROOT/usr/lib -l$PYTHON_LIB"
     fi
 
 	if test $ax_python_devel_found = yes; then

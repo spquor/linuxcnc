@@ -827,43 +827,80 @@ AC_SUBST(GLIB_CFLAGS)
 # as well as those we use in the emc scripts...                              #
 ##############################################################################
 
+DPATH=$DESTDIR/usr/bin:$DESTDIR/bin
 SPATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
 AC_PROG_MAKE_SET
 AC_PROG_RANLIB
 AC_PATH_TOOL(AR, ar)
 AC_PATH_TOOL(INSTALL, install)
 
-AC_PATH_PROG(GREP, grep, "none")
+if test X"$cross_compiling" != Xyes
+then
+    AC_PATH_PROG(GREP, grep, "none")
+else
+    AC_PATH_PROG(GREP_DESTDIR, grep, "none", $DPATH)
+    AC_SUBST(GREP, `AS_ECHO("$GREP_DESTDIR") | sed 's:'$DESTDIR'::g'`)
+fi
 if test $GREP = "none"
 then
     AC_MSG_ERROR([grep not found])
 fi
 
-AC_PATH_PROG(SED, sed, "none")
+if test X"$cross_compiling" != Xyes
+then
+    AC_PATH_PROG(SED, sed, "none")
+else
+    AC_PATH_PROG(SED_DESTDIR, sed, "none", $DPATH)
+    AC_SUBST(SED, `AS_ECHO("$SED_DESTDIR") | sed 's:'$DESTDIR'::g'`)
+fi
 if test $SED = "none"
 then
     AC_MSG_ERROR([sed not found])
 fi
 
-AC_PATH_PROG(PS, ps, "none")
+if test X"$cross_compiling" != Xyes
+then
+    AC_PATH_PROG(PS, ps, "none")
+else
+    AC_PATH_PROG(PS_DESTDIR, ps, "none", $DPATH)
+    AC_SUBST(PS, `AS_ECHO("$PS_DESTDIR") | sed 's:'$DESTDIR'::g'`)
+fi
 if test $PS = "none"
 then
     AC_MSG_ERROR([ps not found])
 fi
 
-AC_PATH_PROG(KILL, kill, "none")
+if test X"$cross_compiling" != Xyes
+then
+    AC_PATH_PROG(KILL, kill, "none")
+else
+    AC_PATH_PROG(KILL_DESTDIR, kill, "none", $DPATH)
+    AC_SUBST(KILL, `AS_ECHO("$KILL_DESTDIR") | sed 's:'$DESTDIR'::g'`)
+fi
 if test $KILL = "none"
 then
     AC_MSG_ERROR([kill not found])
 fi
 
-AC_PATH_PROG(WHOAMI, whoami, "none")
+if test X"$cross_compiling" != Xyes
+then
+    AC_PATH_PROG(WHOAMI, whoami, "none")
+else
+    AC_PATH_PROG(WHOAMI_DESTDIR, whoami, "none", $DPATH)
+    AC_SUBST(WHOAMI, `AS_ECHO("$WHOAMI_DESTDIR") | sed 's:'$DESTDIR'::g'`)
+fi
 if test $WHOAMI = "none"
 then
     AC_MSG_ERROR([whoami not found])
 fi
 
-AC_PATH_PROG(AWK, awk, "none")
+if test X"$cross_compiling" != Xyes
+then
+    AC_PATH_PROG(AWK, awk, "none")
+else
+    AC_PATH_PROG(AWK_DESTDIR, awk, "none", $DPATH)
+    AC_SUBST(AWK, `AS_ECHO("$AWK_DESTDIR") | sed 's:'$DESTDIR'::g'`)
+fi
 if test $AWK = "none"
 then
     AC_MSG_ERROR([awk not found])
@@ -897,19 +934,37 @@ if test "$RTS" != uspace; then
     fi
 fi
 
-AC_PATH_PROG(PIDOF, pidof, "none", $SPATH)
+if test X"$cross_compiling" != Xyes
+then
+    AC_PATH_PROG(PIDOF, pidof, "none", $SPATH)
+else
+    AC_PATH_PROG(PIDOF_DESTDIR, pidof, "none", $DPATH)
+    AC_SUBST(PIDOF, `AS_ECHO("$PIDOF_DESTDIR") | sed 's:'$DESTDIR'::g'`)
+fi
 if test $PIDOF = "none"
 then
     AC_MSG_ERROR([pidof not found])
 fi
 
-AC_PATH_PROG(IPCS, ipcs, "none", $SPATH)
+if test X"$cross_compiling" != Xyes
+then
+    AC_PATH_PROG(IPCS, ipcs, "none", $SPATH)
+else
+    AC_PATH_PROG(IPCS_DESTDIR, ipcs, "none", $DPATH)
+    AC_SUBST(IPCS, `AS_ECHO("$IPCS_DESTDIR") | sed 's:'$DESTDIR'::g'`)
+fi
 if test $IPCS = "none"
 then
     AC_MSG_ERROR([ipcs not found])
 fi
 
-AC_PATH_PROG(FUSER, fuser, "none", $SPATH)
+if test X"$cross_compiling" != Xyes
+then
+    AC_PATH_PROG(FUSER, fuser, "none", $SPATH)
+else
+    AC_PATH_PROG(FUSER_DESTDIR, fuser, "none", $DPATH)
+    AC_SUBST(FUSER, `AS_ECHO("$FUSER_DESTDIR") | sed 's:'$DESTDIR'::g'`)
+fi
 if test $FUSER = "none"
 then
     AC_MSG_ERROR([fuser not found])
@@ -966,26 +1021,18 @@ AC_ARG_WITH(insmod,
             INSMOD="$EMC2_BIN_DIR/linuxcnc_module_helper insert"
     ])
 
-AC_PATH_PROGS(YAPPS, [yapps yapps2])
-if test -z "$YAPPS"; then
+if test X"$cross_compiling" != Xyes
+then
+    AC_PATH_PROGS(YAPPS, [yapps yapps2], "none")
+else
+    AC_PATH_PROGS(YAPPS_DESTDIR, [yapps yapps2], "none", $DPATH)
+    AC_SUBST(YAPPS, `AS_ECHO("$YAPPS_DESTDIR") | sed 's:'$DESTDIR'::g'`)
+fi
+if test "$YAPPS" = "none"; then
   AC_MSG_ERROR([yapps is required to build LinuxCNC
 install with "sudo apt-get install yapps2"])
 fi
 AC_SUBST(YAPPS)
-
-if test X"$cross_compiling" = Xyes
-then
-    AC_SUBST(GREP, /bin/grep)
-    AC_SUBST(SED, /bin/sed)
-    AC_SUBST(PS, /bin/ps)
-    AC_SUBST(KILL, /bin/kill)
-    AC_SUBST(WHOAMI, /usr/bin/whoami)
-    AC_SUBST(AWK, /usr/bin/awk)
-    AC_SUBST(PIDOF, /bin/pidof)
-    AC_SUBST(IPCS, /usr/bin/ipcs)
-    AC_SUBST(FUSER, /usr/bin/fuser)
-    AC_SUBST(YAPPS, /usr/bin/yapps2)
-fi
 
 ##############################################################################
 # Subsection 3.7 - check for programs needed to build documentation          #
