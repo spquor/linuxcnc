@@ -1546,9 +1546,15 @@ AC_CHECK_LIB(Xinerama, XineramaQueryExtension,
 	    [],
 	    [HAVE_XINERAMA=no])
 
+XINERAMA_LIBS="-lXinerama"
+
 if test "x$HAVE_XINERAMA" = "xno"; then
-    AC_MSG_ERROR([Xinerama library or headers not found])
+    AC_MSG_WARN([Xinerama library or headers not found])
+    AC_DEFINE([WITHOUT_XINERAMA], [], [Xinerama library or headers not found])
+    XINERAMA_LIBS=
 fi
+
+AC_SUBST([XINERAMA_LIBS])
 
 #clean out LIBS
 temp_LIBS=$LIBS

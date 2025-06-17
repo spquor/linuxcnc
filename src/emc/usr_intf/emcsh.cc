@@ -20,7 +20,7 @@
 #include <signal.h>
 #include <math.h>
 #include <tcl.h>
-#include <tk.h>
+#include <config.h>
 
 #include "emc/linuxcnc.h"
 #include "rcs.hh"
@@ -3309,6 +3309,8 @@ static int localround(ClientData /*clientdata*/,
     return TCL_OK;
 }
 
+#ifndef WITHOUT_XINERAMA
+#include <tk.h>
 #include <X11/extensions/Xinerama.h>
 
 static int multihead(ClientData /*clientdata*/,
@@ -3348,6 +3350,8 @@ static int multihead(ClientData /*clientdata*/,
     }
     return TCL_OK;
 }
+
+#endif
 
 static void sigQuit(int /*sig*/)
 {
@@ -3707,8 +3711,10 @@ int Linuxcnc_Init(Tcl_Interp * interp)
     Tcl_CreateObjCommand(interp, "round", localround, (ClientData) NULL,
 			 (Tcl_CmdDeleteProc *) NULL);
 
+#ifndef WITHOUT_XINERAMA
     Tcl_CreateObjCommand(interp, "multihead", multihead, (ClientData) NULL,
                          (Tcl_CmdDeleteProc*) NULL);
+#endif
 
     /*
      * Specify a user-specific startup file to invoke if the application
