@@ -1,0 +1,28 @@
+
+EMCMODULESRCS := emc/usr_intf/axis/extensions/emcmodule.cc
+PYSRCS += $(EMCMODULESRCS)
+
+EMCMODULE := ../lib/python/linuxcnc.so
+EMCGRAPHICS :=  ../lib/python/qt5_graphics.py
+EMCBIN := ../bin/qtvcp
+
+$(call TOOBJSDEPS, $(EMCMODULESRCS)) : Makefile.inc
+
+$(EMCMODULE): $(call TOOBJS, $(EMCMODULESRCS)) ../lib/liblinuxcnc.a ../lib/libnml.so.0 \
+              ../lib/liblinuxcncini.so ../lib/libtooldata.so.0
+	$(ECHO) Linking python module $(notdir $@)
+	$(Q)$(CXX) $(LDFLAGS) -shared -o $@ $^ -lm -lepoxy
+
+$(EMCGRAPHICS): emc/usr_intf/gremlin/qt5_graphics.py
+	@$(ECHO) Syntax checking python script $(notdir $@)
+	$(Q)$(PYTHON) -m py_compile $<
+	$(ECHO) Copying python script $(notdir $@)
+	$(Q)cp $< $@
+
+$(EMCBIN): emc/usr_intf/qtvcp/qtvcp.py
+	@$(ECHO) Syntax checking python script $(notdir $@)
+	$(Q)$(PYTHON) -m py_compile $<
+	$(ECHO) Copying python script $(notdir $@)
+	$(Q)(echo '#!$(PYTHON_TARGET)'; sed '1 { /^#!/d; }' $<) > $@.tmp && chmod +x $@.tmp && mv -f $@.tmp $@
+
+PYTARGETS += $(EMCMODULE) $(EMCGRAPHICS) $(EMCBIN)
