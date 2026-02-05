@@ -31,6 +31,8 @@ if test "$srcdir" != "."; then
 fi
 
 AC_PROG_CXX([$RTSCC c++ clang++])
+AC_PATH_TOOL(LD, ld)
+AC_PATH_TOOL(OBJDUMP, objdump)
 AC_PROG_INSTALL
 
 m4_include([m4/ax_require_defined.m4])
@@ -874,8 +876,8 @@ AC_SUBST(GTK2_CFLAGS)
 SPATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
 AC_PROG_MAKE_SET
 AC_PROG_RANLIB
-AC_PATH_PROG(AR,ar)
-AC_PATH_PROG(INSTALL, install)
+AC_PATH_TOOL(AR,ar)
+AC_PATH_TOOL(INSTALL, install)
 
 AC_PATH_PROG(SED, sed, "none")
 if test $SED = "none"
