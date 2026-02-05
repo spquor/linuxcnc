@@ -501,7 +501,7 @@ TARGETS += ../bin/ngcgui
 TARGETS += ../bin/pyngcgui
 ../bin/pyngcgui: Makefile
 	$(Q)rm -f $@
-	$(Q)(echo "#!$(PYTHON)")>|$@
+	$(Q)(echo "#!$(PYTHON_TARGET)")>|$@
 	$(Q)(echo "import pyngcgui")>>$@
 	$(Q)(echo "pyngcgui.standalone_pyngcgui()")>>$@
 	$(Q)chmod +x $@
@@ -510,7 +510,7 @@ TARGETS += ../bin/pyngcgui
 TARGETS += ../bin/gremlin_view
 ../bin/gremlin_view: Makefile
 	$(Q)rm -f $@
-	$(Q)(echo "#!$(PYTHON)")>|$@
+	$(Q)(echo "#!$(PYTHON_TARGET)")>|$@
 	$(Q)(echo "import gremlin_view")>>$@
 	$(Q)(echo "gremlin_view.standalone_gremlin_view()")>>$@
 	$(Q)chmod +x $@
