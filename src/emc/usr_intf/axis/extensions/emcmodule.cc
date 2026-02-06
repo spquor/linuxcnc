@@ -42,7 +42,6 @@
 #include <cmath>
 
 #include <epoxy/gl.h>
-#include <epoxy/glx.h>
 
 #define LOCAL_SPINDLE_FORWARD (1)
 #define LOCAL_SPINDLE_REVERSE (-1)
