@@ -102,6 +102,13 @@ AC_DEFUN([AX_PYTHON_DEVEL],[
 	   PYTHON_VERSION=""
 	fi
 
+    if test X"$cross_compiling" = Xyes; then
+       PYTHON_CPPFLAGS="-I$SYSROOT/usr/include/$PYTHON_BIN"
+       PYTHON_LIBS="-L$SYSROOT/usr/lib -l$PYTHON_LIB"
+       PYTHON_SITE_PKG="$SYSROOT/usr/lib/$PYTHON_BIN/site-packages"
+       PYTHON_PLATFORM_SITE_PKG="$SYSROOT/usr/lib/$PYTHON_BIN/site-packages"
+    fi
+
 	if test $ax_python_devel_found = yes; then
 	   #
 	   # Check for a version of Python >= 2.1.0

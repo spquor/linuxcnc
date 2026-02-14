@@ -147,12 +147,11 @@ AC_DEFUN([_AX_BOOST_BASE_RUNDETECT],[
            done],[
       AC_MSG_RESULT([no])])
     ],[
-        if test X"$cross_compiling" = Xyes; then
-            search_libsubdirs=$multiarch_libsubdir
-        else
-            search_libsubdirs="$multiarch_libsubdir $libsubdirs"
-        fi
+        search_libsubdirs="$multiarch_libsubdir $libsubdirs"
         for _AX_BOOST_BASE_boost_path_tmp in /usr /usr/local /opt /opt/local /opt/homebrew ; do
+            if test X"$cross_compiling" = Xyes; then
+                _AX_BOOST_BASE_boost_path_tmp=$SYSROOT$_AX_BOOST_BASE_boost_path_tmp
+            fi
             if test -d "$_AX_BOOST_BASE_boost_path_tmp/include/boost" && test -r "$_AX_BOOST_BASE_boost_path_tmp/include/boost" ; then
                 for libsubdir in $search_libsubdirs ; do
                     if ls "$_AX_BOOST_BASE_boost_path_tmp/$libsubdir/libboost_"* >/dev/null 2>&1 ; then break; fi
@@ -227,7 +226,7 @@ AC_DEFUN([_AX_BOOST_BASE_RUNDETECT],[
                 fi
             fi
         else
-            if test "x$cross_compiling" != "xyes" ; then
+            if test X"$cross_compiling" != Xyes; then
                 for _AX_BOOST_BASE_boost_path in /usr /usr/local /opt /opt/local /opt/homebrew ; do
                     if test -d "$_AX_BOOST_BASE_boost_path" && test -r "$_AX_BOOST_BASE_boost_path" ; then
                         for i in `ls -d $_AX_BOOST_BASE_boost_path/include/boost-* 2>/dev/null`; do

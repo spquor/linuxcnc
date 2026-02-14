@@ -70,7 +70,11 @@ if test x$ax_python_bin != x; then
      fi
    fi
 fi
+AS_UNSET([PYTHON_BIN])
+AS_UNSET([ac_cv_path_PYTHON_BIN])
+AS_UNSET([ac_cv_prog_PYTHON_BIN])
 done
+
 if test x$ax_python_bin = x; then
    ax_python_bin=no
 fi
