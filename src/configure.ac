@@ -1714,7 +1714,7 @@ fi
 AC_SUBST(MSGFMT)
 
 if test "$PYTHON" = "none"; then
-    AC_MSG_ERROR([Python missing.  Install it or specify --disable-python to skip the parts of LinuxCNC that depend on Python])
+    AC_MSG_ERROR([Python missing.  Install Python 2.7 or above])
 fi
 
 AC_MSG_CHECKING([python version])
@@ -1760,18 +1760,6 @@ else
     SITEPY="$($PYTHON -c 'import sysconfig; s = sysconfig.get_scheme_names(); m=list(set(("deb_system", "rpm_prefix")) & set(s)); print(sysconfig.get_path("platlib", m.__getitem__(0))) if m else print("/usr/lib/python3/dist-packages");')"
 fi
 AC_MSG_RESULT($SITEPY)
-
-AC_MSG_CHECKING(for working GLU quadrics)
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
-#include <GL/gl.h>
-#include <GL/glu.h>
-]], [[GLUquadric *q;]])],[AC_MSG_RESULT(yes)],[
-            AC_MSG_ERROR([Required GLU library missing.  Install it or specify --disable-python to skip the parts of LinuxCNC that depend on Python])
-
-])
-
-AC_MSG_CHECKING(for Xmu headers)
-AC_CHECK_HEADERS(X11/Xmu/Xmu.h,[],[AC_MSG_ERROR([Required Xmu header missing.  Install it, or specify --disable-python to skip the parts of LinuxCNC that depend on Python])])
 
 AC_SUBST([PYTHON_TARGET])
 AC_SUBST([SITEPY])
