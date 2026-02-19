@@ -1412,10 +1412,12 @@ AC_ARG_WITH(tclConfig,
     ])
 
 # if not specified, search for tclConfig.sh
-if (test "x$TCLCONFIG" = "x"); then
-    TCLCONFIG=$(find $SYSROOT/usr/lib* -maxdepth 2 -name tclConfig.sh | sort -r | head -n1)
+if test X"$cross_compiling" != Xyes; then
     if (test "x$TCLCONFIG" = "x"); then
-	TCLCONFIG=$(find $SYSROOT/usr/local/lib* -maxdepth 2 -name tclConfig.sh | sort -r | head -n1)
+        TCLCONFIG=$(find /usr/lib* -maxdepth 2 -name tclConfig.sh | sort -r | head -n1)
+        if (test "x$TCLCONFIG" = "x"); then
+        TCLCONFIG=$(find /usr/local/lib* -maxdepth 2 -name tclConfig.sh | sort -r | head -n1)
+        fi
     fi
 fi
 
@@ -1451,11 +1453,13 @@ if test -z "$TKCONFIG"; then
     TKCONFIG=$(dirname $TCLCONFIG)/tkConfig.sh
     if ! test -f $TKCONFIG; then unset TKCONFIG; fi
 fi
-if (test "x$TKCONFIG" = "x"); then
-    # search for tkConfig.sh
-    TKCONFIG=$(find $SYSROOT/usr/lib -maxdepth 2 -name tkConfig.sh | sort -r | head -n1)
+if test X"$cross_compiling" != Xyes; then
     if (test "x$TKCONFIG" = "x"); then
-	TKCONFIG=$(find $SYSROOT/usr/local/lib -maxdepth 2 -name tkConfig.sh | head -n1)
+        # search for tkConfig.sh
+        TKCONFIG=$(find /usr/lib -maxdepth 2 -name tkConfig.sh | sort -r | head -n1)
+        if (test "x$TKCONFIG" = "x"); then
+        TKCONFIG=$(find /usr/local/lib -maxdepth 2 -name tkConfig.sh | head -n1)
+        fi
     fi
 fi
 
