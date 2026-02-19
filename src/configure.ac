@@ -1057,6 +1057,13 @@ AC_ARG_WITH(insmod,
             INSMOD="$EMC2_BIN_DIR/linuxcnc_module_helper insert"
     ])
 
+# check for BOOST libs and PYTHON install
+AX_BOOST_BASE(,,AC_MSG_ERROR([libboost not found]))
+AX_PYTHON
+AC_PATH_PROG(PYTHON,[$PYTHON_BIN])
+AX_PYTHON_DEVEL(,,AC_MSG_ERROR([python-dev not found]))
+AX_BOOST_PYTHON(,,AC_MSG_ERROR([libboost-python not found]))
+
 if test X"$cross_compiling" != Xyes
 then
     AC_PATH_PROGS(YAPPS, [yapps yapps2], "none")
@@ -1075,12 +1082,6 @@ AC_SUBST(YAPPS)
 # Check for programs we need to build and install docs.                      #
 # (Optional, if not present, just don't build the docs.)                     #
 ##############################################################################
-
-AX_BOOST_BASE(,,AC_MSG_ERROR([libboost not found]))
-AX_PYTHON
-AC_PATH_PROG(PYTHON,[$PYTHON_BIN])
-AX_PYTHON_DEVEL(,,AC_MSG_ERROR([python-dev not found]))
-AX_BOOST_PYTHON(,,AC_MSG_ERROR([libboost-python not found]))
 
 AC_MSG_CHECKING([whether to build documentation])
 AC_ARG_ENABLE(build-documentation,
@@ -1412,9 +1413,9 @@ AC_ARG_WITH(tclConfig,
 
 # if not specified, search for tclConfig.sh
 if (test "x$TCLCONFIG" = "x"); then
-    TCLCONFIG=$(find /usr/lib* -maxdepth 2 -name tclConfig.sh | sort -r | head -n1)
+    TCLCONFIG=$(find $SYSROOT/usr/lib* -maxdepth 2 -name tclConfig.sh | sort -r | head -n1)
     if (test "x$TCLCONFIG" = "x"); then
-	TCLCONFIG=$(find /usr/local/lib* -maxdepth 2 -name tclConfig.sh | sort -r | head -n1)
+	TCLCONFIG=$(find $SYSROOT/usr/local/lib* -maxdepth 2 -name tclConfig.sh | sort -r | head -n1)
     fi
 fi
 
@@ -1452,9 +1453,9 @@ if test -z "$TKCONFIG"; then
 fi
 if (test "x$TKCONFIG" = "x"); then
     # search for tkConfig.sh
-    TKCONFIG=$(find /usr/lib -maxdepth 2 -name tkConfig.sh | sort -r | head -n1)
+    TKCONFIG=$(find $SYSROOT/usr/lib -maxdepth 2 -name tkConfig.sh | sort -r | head -n1)
     if (test "x$TKCONFIG" = "x"); then
-	TKCONFIG=$(find /usr/local/lib -maxdepth 2 -name tkConfig.sh | head -n1)
+	TKCONFIG=$(find $SYSROOT/usr/local/lib -maxdepth 2 -name tkConfig.sh | head -n1)
     fi
 fi
 
@@ -1723,30 +1724,32 @@ then
 fi
 AC_MSG_RESULT(OK)
 
-AC_MSG_CHECKING([match between tk and Tkinter versions])
-if $PYTHON -c 'import sys;raise SystemExit(sys.hexversion<0x3040000)'
-then
+if test "$BUILD_GTK" = "yes"; then
+    AC_MSG_CHECKING([match between tk and Tkinter versions])
+    if $PYTHON -c 'import sys;raise SystemExit(sys.hexversion<0x3040000)'
+    then
 
-	PYTHON_TK_VERSION="`$PYTHON -c 'import tkinter; print(tkinter.TkVersion)'`"
-	PYTHON_TCL_VERSION="`$PYTHON -c 'import tkinter; print(tkinter.TclVersion)'`"
+        PYTHON_TK_VERSION="`$PYTHON -c 'import tkinter; print(tkinter.TkVersion)'`"
+        PYTHON_TCL_VERSION="`$PYTHON -c 'import tkinter; print(tkinter.TclVersion)'`"
 
-else
+    else
 
-	PYTHON_TK_VERSION="`$PYTHON -c 'import _tkinter; print(_tkinter.TK_VERSION)'`"
-	PYTHON_TCL_VERSION="`$PYTHON -c 'import _tkinter; print(_tkinter.TCL_VERSION)'`"
+        PYTHON_TK_VERSION="`$PYTHON -c 'import _tkinter; print(_tkinter.TK_VERSION)'`"
+        PYTHON_TCL_VERSION="`$PYTHON -c 'import _tkinter; print(_tkinter.TCL_VERSION)'`"
 
+    fi
+
+    if test "$PYTHON_TCL_VERSION" != "$TCL_VERSION"; then
+        AC_MSG_RESULT([TCL mismatch: $TCL_VERSION vs $PYTHON_TCL_VERSION])
+        AC_MSG_ERROR([Python requires use of Tcl $PYTHON_TCL_VERSION and Tk $PYTHON_TK_VERSION.
+    Install this version and specify --with-tclConfig and --with-tkConfig if necessary])
+    fi
+    if test "$PYTHON_TK_VERSION" != "$TK_VERSION"; then
+        AC_MSG_RESULT([Tk mismatch: $TK_VERSION vs $PYTHON_TK_VERSION])
+        AC_MSG_ERROR(["Python requires use of Tk $TK_VERSION.  Install this version and specify --with-tkConfig if necessary"])
+    fi
+    AC_MSG_RESULT([$PYTHON_TK_VERSION])
 fi
-
-if test "$PYTHON_TCL_VERSION" != "$TCL_VERSION"; then
-    AC_MSG_RESULT([TCL mismatch: $TCL_VERSION vs $PYTHON_TCL_VERSION])
-    AC_MSG_ERROR([Python requires use of Tcl $PYTHON_TCL_VERSION and Tk $PYTHON_TK_VERSION.
-Install this version and specify --with-tclConfig and --with-tkConfig if necessary])
-fi
-if test "$PYTHON_TK_VERSION" != "$TK_VERSION"; then
-    AC_MSG_RESULT([Tk mismatch: $TK_VERSION vs $PYTHON_TK_VERSION])
-    AC_MSG_ERROR(["Python requires use of Tk $TK_VERSION.  Install this version and specify --with-tkConfig if necessary"])
-fi
-AC_MSG_RESULT([$PYTHON_TK_VERSION])
 
 AC_MSG_CHECKING(for site-package location)
 if test X"$cross_compiling" = Xyes; then
